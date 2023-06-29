@@ -1,0 +1,17 @@
+.black-theme {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+.pink-theme {
+  background-color: #ebced0 !important;
+  color: #000000 !important;
+}
+
+.custom-shadow-pink {
+  box-shadow: 8px 8px 5px 2px rgba(0, 0, 0, 0.4);
+}
+
+.custom-shadow-black {
+  box-shadow: 8px 8px 5px 2px rgb(235, 206, 208, 0.7);
+}
