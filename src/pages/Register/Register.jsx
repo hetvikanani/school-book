@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Steps, Form, Input, DatePicker, Upload, message } from 'antd';
-import { UserOutlined, UploadOutlined } from '@ant-design/icons';
+import { Steps, Form, Input, DatePicker } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+import { ImageUpload } from '../../Components';
 
 const { Step } = Steps;
 
 const Register = () => {
   const [form] = Form.useForm();
   const [currentStep, setCurrentStep] = useState(0);
+  const [uploadedImage, setUploadedImage] = useState(null);
 
   const steps = [
     {
@@ -92,39 +94,8 @@ const Register = () => {
             <Input prefix={<UserOutlined />} placeholder='Mobile' />
           </Form.Item>
 
-          <Form.Item
-            label='Profile Picture'
-            name='profile'
-            rules={[{ message: 'Please upload your profile picture' }]}
-            valuePropName='fileList'
-            getValueFromEvent={(e) => {
-              if (Array.isArray(e)) {
-                return e;
-              }
-              return e && e.fileList;
-            }}
-          >
-            <Upload
-              accept='image/*'
-              listType='picture-card'
-              showUploadList={false}
-              beforeUpload={(file) => {
-                const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-                if (!isJpgOrPng) {
-                  message.error('You can only upload JPG/PNG file!');
-                }
-                const isLt2M = file.size / 1024 / 1024 < 2;
-                if (!isLt2M) {
-                  message.error('Image must be smaller than 2MB!');
-                }
-                return isJpgOrPng && isLt2M;
-              }}
-            >
-              <div>
-                <UploadOutlined />
-                <div style={{ marginTop: 8 }}>Upload</div>
-              </div>
-            </Upload>
+          <Form.Item name='image' label='Profile Photo'>
+            <ImageUpload onUpload={setUploadedImage} />
           </Form.Item>
         </>
       ),

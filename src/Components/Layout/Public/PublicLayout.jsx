@@ -1,12 +1,14 @@
 import { Carousel } from 'antd';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom';
 
 import styles from './layout.module.css';
+import { loginUser } from '../../../redux/auth/authSlice';
 
-const Layout = () => {
+const PublicLayout = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const dispatch = useDispatch();
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -14,17 +16,18 @@ const Layout = () => {
     setCurrentSlide(currentSlider === 0 ? 1 : 0);
   };
   if (isLoggedIn) {
-    return <Navigate to='/dashboard/profile' />;
+    return <Navigate to='/dashboard' />;
   }
   return (
     <div
       className={`bg-white ${
         currentSlide === 0 ? styles['black-theme'] : styles['pink-theme']
-      }  transition-colors duration-500`}
+      }  transition-colors duration-500 animate-fade-in`}
     >
+      <button onClick={() => dispatch(loginUser())}>Temp login</button>
       <div className='container mx-auto p-8 pb-24'>
         <div className='flex flex-col items-center justify-center py-8'>
-          <h1 className='text-4xl font-bold mb-4'>Welcome to Our Student Community</h1>
+          <h1 className='text-4xl font-bold mb-4 text-center'>Welcome to Our Student Community</h1>
           <p className='text-lg text-center'>Connect, Share, and Learn with fellow students</p>
         </div>
         <div className='flex flex-col md:flex-row justify-between items-center'>
@@ -89,8 +92,11 @@ const Layout = () => {
           </button>
         </div>
       </div>
+      <div className={styles.scrollIndicator}>
+        <span className={styles.scrollArrow}></span>
+      </div>
     </div>
   );
 };
 
-export default Layout;
+export default PublicLayout;
