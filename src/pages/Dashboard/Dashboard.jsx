@@ -2,10 +2,17 @@ import { useState } from 'react';
 import { Modal, Input, Button, Form } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { ImageUpload, Post } from '../../Components';
+import { useDispatch, useSelector } from 'react-redux';
+import { createPost, updatePostInUser } from '../../redux/reducers';
+import { generateUniqueId } from '../../utils';
 
 const Dashboard = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [uploadedImage, setUploadedImage] = useState(null);
+  const loggedInUserId = useSelector((state) => state.auth.loggedInUserId);
+  const dispatch = useDispatch();
+
+  const posts = useSelector((store) => store.post.allPosts);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -15,17 +22,20 @@ const Dashboard = () => {
     setIsModalVisible(false);
   };
 
-  const handleFormSubmit = (values) => {
-    // Handle form submission logic here
-    console.log(values);
-    // Close the modal
+  const handleSubmit = (values) => {
+    const id = generateUniqueId();
+    dispatch(
+      createPost({
+        description: values.description,
+        title: values.title,
+        id: id,
+        postedUserId: loggedInUserId,
+        postImage: uploadedImage,
+      }),
+    );
+    dispatch(updatePostInUser({ id: loggedInUserId, postId: id }));
     handleModalClose();
   };
-
-  const handleSubmit = (values) => {
-    handleFormSubmit(values);
-  };
-
   return (
     <div className='flex flex-col items-center'>
       <div className='mb-4 z-10 mt-4'>
@@ -39,10 +49,9 @@ const Dashboard = () => {
           Create Post
         </Button>
       </div>
-      <Post />
-      <Post />
-      <Post />
-      <Post />
+      {[...posts].reverse().map((post) => (
+        <Post key={post.id} post={post} />
+      ))}
       <Modal
         title='Create Post'
         open={isModalVisible}
@@ -60,7 +69,7 @@ const Dashboard = () => {
           >
             <Input.TextArea placeholder='Enter description' rows={4} />
           </Form.Item>
-          <Form.Item label='Post Picture' name='profile'>
+          <Form.Item label='Post Picture' name='postImage'>
             <ImageUpload onUpload={setUploadedImage} />
           </Form.Item>
           <div>

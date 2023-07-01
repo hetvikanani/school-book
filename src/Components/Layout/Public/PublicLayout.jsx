@@ -1,14 +1,12 @@
 import { Carousel } from 'antd';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom';
 
 import styles from './layout.module.css';
-import { loginUser } from '../../../redux/auth/authSlice';
 
 const PublicLayout = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-  const dispatch = useDispatch();
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -24,7 +22,6 @@ const PublicLayout = () => {
         currentSlide === 0 ? styles['black-theme'] : styles['pink-theme']
       }  transition-colors duration-500 animate-fade-in`}
     >
-      <button onClick={() => dispatch(loginUser())}>Temp login</button>
       <div className='container mx-auto p-8 pb-24'>
         <div className='flex flex-col items-center justify-center py-8'>
           <h1 className='text-4xl font-bold mb-4 text-center'>Welcome to Our Student Community</h1>

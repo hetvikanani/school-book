@@ -2,15 +2,30 @@ import { Form, Input, DatePicker, Button, message } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { ImageUpload } from '../../Components';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateProfile } from '../../redux/auth/authSlice';
+import { getUserById } from '../../utils';
+import { useNavigate } from 'react-router-dom';
+import dayjs from 'dayjs';
 
 const ProfileForm = () => {
   const [form] = Form.useForm();
   const [uploadedImage, setUploadedImage] = useState(null);
+  const user = useSelector((store) => getUserById(store.auth.allUsers, store.auth.loggedInUserId));
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const onFinish = (values) => {
-    console.log('Received values:', values);
-    // Add your logic to handle form submission here
+    dispatch(
+      updateProfile({
+        ...user,
+        ...values,
+        image: uploadedImage || values.image,
+        dob: dayjs(values.dob).valueOf(),
+      }),
+    );
     message.success('Profile updated');
+    navigate('/dashboard');
   };
 
   return (
@@ -23,11 +38,12 @@ const ProfileForm = () => {
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
           className='w-96'
+          initialValues={{ ...user, dob: dayjs(user.dob) }}
         >
           <h2 className='text-2xl mb-4'>Profile Information</h2>
           <Form.Item
             label='Full Name'
-            name='fullName'
+            name='name'
             rules={[{ required: true, message: 'Please enter your full name' }]}
           >
             <Input prefix={<UserOutlined />} placeholder='Full Name' />
@@ -65,26 +81,12 @@ const ProfileForm = () => {
             <Input prefix={<UserOutlined />} placeholder='LinkedIn' />
           </Form.Item>
 
-          <Form.Item
-            label='Mobile'
-            name='mobile'
-            rules={[{ required: true, message: 'Please enter your mobile number' }]}
-          >
+          <Form.Item label='Mobile' name='mobile'>
             <Input prefix={<UserOutlined />} placeholder='Mobile' />
           </Form.Item>
 
-          <Form.Item
-            label='Profile Picture'
-            name='profile'
-            valuePropName='fileList'
-            getValueFromEvent={(e) => {
-              if (Array.isArray(e)) {
-                return e;
-              }
-              return e && e.fileList;
-            }}
-          >
-            <ImageUpload onUpload={setUploadedImage} />
+          <Form.Item label='Profile Picture' name='image'>
+            <ImageUpload onUpload={setUploadedImage} initalValue={user.image} />
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
             <Button

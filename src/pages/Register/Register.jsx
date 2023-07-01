@@ -1,8 +1,13 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Steps, Form, Input, DatePicker } from 'antd';
+import { Link, useNavigate } from 'react-router-dom';
+import { Steps, Form, Input, DatePicker, message } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { ImageUpload } from '../../Components';
+import { useDispatch, useSelector } from 'react-redux';
+import { isEmailExsist } from '../../utils';
+import { registerUser } from '../../redux/auth/authSlice';
+import moment from 'moment';
+import dayjs from 'dayjs';
 
 const { Step } = Steps;
 
@@ -10,6 +15,9 @@ const Register = () => {
   const [form] = Form.useForm();
   const [currentStep, setCurrentStep] = useState(0);
   const [uploadedImage, setUploadedImage] = useState(null);
+  const allUsers = useSelector((store) => store.auth.allUsers);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const steps = [
     {
@@ -19,8 +27,11 @@ const Register = () => {
           <h2 className='text-2xl mb-4'>Create an Account</h2>
           <Form.Item
             label='Full Name'
-            name='fullName'
-            rules={[{ required: true, message: 'Please enter your full name' }]}
+            name='name'
+            rules={[
+              { required: true, message: 'Please enter your full name' },
+              { min: 4, message: 'Name should be more than 3' },
+            ]}
           >
             <Input prefix={<UserOutlined />} placeholder='Full Name' />
           </Form.Item>
@@ -86,11 +97,7 @@ const Register = () => {
             <Input prefix={<UserOutlined />} placeholder='LinkedIn' />
           </Form.Item>
 
-          <Form.Item
-            label='Mobile'
-            name='mobile'
-            rules={[{ required: true, message: 'Please enter your mobile number' }]}
-          >
+          <Form.Item label='Mobile' name='mobile'>
             <Input prefix={<UserOutlined />} placeholder='Mobile' />
           </Form.Item>
 
@@ -103,18 +110,28 @@ const Register = () => {
   ];
 
   const handleNext = () => {
-    form.validateFields().then(() => {
-      setCurrentStep(currentStep + 1);
+    form.validateFields().then((values) => {
+      if (isEmailExsist(values.email, allUsers)) {
+        message.error('Email already register');
+      } else {
+        setCurrentStep(currentStep + 1);
+      }
     });
   };
-
   const handlePrev = () => {
     setCurrentStep(currentStep - 1);
   };
 
-  const onFinish = (values) => {
-    console.log('Received values:', values);
-    // Add your logic to handle form submission here
+  const onFinish = () => {
+    message.success('Congratulation!! Now you can login with same cred!!');
+    dispatch(
+      registerUser({
+        ...form.getFieldValue(),
+        image: uploadedImage,
+        dob: dayjs(form.getFieldValue('dob')).valueOf(),
+      }),
+    );
+    navigate('/login');
   };
 
   return (
@@ -126,13 +143,7 @@ const Register = () => {
           ))}
         </Steps>
 
-        <Form
-          form={form}
-          name='registrationForm'
-          onFinish={onFinish}
-          labelCol={{ span: 6 }}
-          wrapperCol={{ span: 18 }}
-        >
+        <Form form={form} name='registrationForm' labelCol={{ span: 6 }} wrapperCol={{ span: 18 }}>
           {steps[currentStep].content}
 
           <div className='flex justify-center mt-8'>
@@ -153,7 +164,10 @@ const Register = () => {
               </button>
             )}
             {currentStep === steps.length - 1 && (
-              <button className='bg-black hover:bg-pink-500 text-white font-bold py-2 px-4 rounded-full w-48 mx-2'>
+              <button
+                onClick={onFinish}
+                className='bg-black hover:bg-pink-500 text-white font-bold py-2 px-4 rounded-full w-48 mx-2'
+              >
                 Register
               </button>
             )}

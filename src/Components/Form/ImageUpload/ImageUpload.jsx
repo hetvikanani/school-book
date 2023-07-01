@@ -3,8 +3,8 @@ import { UploadOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 
 // eslint-disable-next-line react/prop-types
-const ImageUpload = ({ onUpload }) => {
-  const [uploadedImage, setUploadedImage] = useState(null);
+const ImageUpload = ({ onUpload, initalValue }) => {
+  const [uploadedImage, setUploadedImage] = useState(initalValue);
 
   const handleImageUpload = (file) => {
     // Check if the uploaded file is an image

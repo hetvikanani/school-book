@@ -1,3 +1,4 @@
+// Import the needed dependencies
 import { useState, useEffect } from 'react';
 import { Avatar, Layout, Menu } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,6 +12,8 @@ import {
   LogoutOutlined,
 } from '@ant-design/icons';
 import { logoutUser } from '../../../redux/auth/authSlice';
+import { getAvatarText, getUserById } from '../../../utils';
+import MyAvatar from '../../MyAvatar/MyAvatar';
 
 const { Content, Sider } = Layout;
 
@@ -29,7 +32,10 @@ const items = options.map((item) => ({
 }));
 
 const App = () => {
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const { isLoggedIn, user } = useSelector((state) => ({
+    isLoggedIn: state.auth.isLoggedIn,
+    user: getUserById(state.auth.allUsers, state.auth.loggedInUserId),
+  }));
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -83,8 +89,8 @@ const App = () => {
       >
         <div className='demo-logo-vertical' />
         <div className='flex items-center justify-start h-16 m-4 bg-inherit text-white font-bold'>
-          <Avatar size={32} src='user-avatar.png' className='mr-2' />
-          <span className='text-lg font-bold'>John Doe</span>
+          <MyAvatar user={user} />
+          <span className='text-lg font-bold'>{user?.name}</span>
         </div>
         <Menu
           theme='dark'

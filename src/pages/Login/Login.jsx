@@ -1,13 +1,22 @@
-import { Form, Input } from 'antd';
+import { Form, Input, message } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { isEmailPasswordValid } from '../../utils';
+import { loginUser } from '../../redux/auth/authSlice';
 
 const Login = () => {
   const [form] = Form.useForm();
+  const allUsers = useSelector((store) => store.auth.allUsers);
+  const dispatch = useDispatch();
 
   const onFinish = (values) => {
-    console.log('Received values:', values);
-    // Add your logic to handle form submission here
+    const user = isEmailPasswordValid(allUsers, values);
+    if (user) {
+      dispatch(loginUser(user));
+    } else {
+      message.error('Email and password not valid');
+    }
   };
 
   return (
