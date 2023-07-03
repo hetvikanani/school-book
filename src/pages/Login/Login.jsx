@@ -1,13 +1,14 @@
 import { Form, Input, message } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { isEmailPasswordValid } from '../../utils';
 import { loginUser } from '../../redux/auth/authSlice';
+import { useAllUsers } from '../../hooks';
 
 const Login = () => {
   const [form] = Form.useForm();
-  const allUsers = useSelector((store) => store.auth.allUsers);
+  const allUsers = useAllUsers();
   const dispatch = useDispatch();
 
   const onFinish = (values) => {

@@ -11,7 +11,6 @@ export default function App() {
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
       </Route>
-
       <Route path='/dashboard' element={<PrivateLayout />}>
         <Route path='' element={<Dashboard />} />
         <Route path='all-post' element={<Dashboard />} />

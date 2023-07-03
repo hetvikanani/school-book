@@ -1,19 +1,12 @@
-import { useSelector } from 'react-redux';
 import { Post } from '../../Components';
-import { getUserById, populateSavedPost } from '../../utils';
 import { Empty, Typography } from 'antd';
 import { BookOutlined } from '@ant-design/icons';
+import { usePopulatePosts } from '../../hooks';
 
 const { Title, Text } = Typography;
 
 const SavePost = () => {
-  const savedPosts = useSelector((state) =>
-    populateSavedPost(
-      state.post.allPosts,
-      getUserById(state.auth.allUsers, state.auth.loggedInUserId),
-    ),
-  );
-
+  const savedPosts = usePopulatePosts('savedPost');
   const renderPosts = () => {
     if (savedPosts.length === 0) {
       return (

@@ -8,9 +8,9 @@ const reminderSlice = createSlice({
   name: 'reminder',
   initialState,
   reducers: {
-    createReminder(state, action) {},
-    editReminder(state, action) {},
-    deleteReminder(state, action) {},
+    // createReminder(state, action) {},
+    // editReminder(state, action) {},
+    // deleteReminder(state, action) {},
   },
 });
 

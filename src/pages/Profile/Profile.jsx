@@ -2,16 +2,16 @@ import { Form, Input, DatePicker, Button, message } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { ImageUpload } from '../../Components';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { updateProfile } from '../../redux/auth/authSlice';
-import { getUserById } from '../../utils';
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
+import { useLoggedInUser } from '../../hooks';
 
 const ProfileForm = () => {
   const [form] = Form.useForm();
   const [uploadedImage, setUploadedImage] = useState(null);
-  const user = useSelector((store) => getUserById(store.auth.allUsers, store.auth.loggedInUserId));
+  const user = useLoggedInUser();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

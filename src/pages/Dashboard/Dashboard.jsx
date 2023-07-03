@@ -2,17 +2,17 @@ import { useState } from 'react';
 import { Modal, Input, Button, Form } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { ImageUpload, Post } from '../../Components';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { createPost, updatePostInUser } from '../../redux/reducers';
 import { generateUniqueId } from '../../utils';
+import { useAllPosts, useLoggedInUserId } from '../../hooks';
 
 const Dashboard = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [uploadedImage, setUploadedImage] = useState(null);
-  const loggedInUserId = useSelector((state) => state.auth.loggedInUserId);
+  const loggedInUserId = useLoggedInUserId();
+  const posts = useAllPosts();
   const dispatch = useDispatch();
-
-  const posts = useSelector((store) => store.post.allPosts);
 
   const showModal = () => {
     setIsModalVisible(true);

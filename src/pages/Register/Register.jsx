@@ -3,11 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Steps, Form, Input, DatePicker, message } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { ImageUpload } from '../../Components';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { isEmailExsist } from '../../utils';
 import { registerUser } from '../../redux/auth/authSlice';
-import moment from 'moment';
 import dayjs from 'dayjs';
+import { useAllUsers } from '../../hooks';
 
 const { Step } = Steps;
 
@@ -15,7 +15,7 @@ const Register = () => {
   const [form] = Form.useForm();
   const [currentStep, setCurrentStep] = useState(0);
   const [uploadedImage, setUploadedImage] = useState(null);
-  const allUsers = useSelector((store) => store.auth.allUsers);
+  const allUsers = useAllUsers();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

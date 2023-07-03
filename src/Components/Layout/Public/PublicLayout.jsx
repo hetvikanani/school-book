@@ -1,12 +1,12 @@
 import { Carousel } from 'antd';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom';
 
 import styles from './layout.module.css';
+import { useIsLoggedIn } from '../../../hooks';
 
 const PublicLayout = () => {
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const isLoggedIn = useIsLoggedIn();
 
   const [currentSlide, setCurrentSlide] = useState(0);
 

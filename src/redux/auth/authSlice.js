@@ -55,38 +55,28 @@ const authSlice = createSlice({
       );
     },
     updateSavedPostInUser(state, action) {
-      state.allUsers = state.allUsers.map((user) => {
-        if (user.id === action.payload.id) {
-          const isPostAlreadySaved = user.savedPost.filter(
-            (savedPostId) => savedPostId === action.payload.postId,
-          );
-          if (isPostAlreadySaved.length > 0) {
-            return {
+      state.allUsers = state.allUsers.map((user) =>
+        user.id === action.payload.id
+          ? {
               ...user,
-              savedPost: user.savedPost.filter(
-                (savedPostId) => savedPostId !== action.payload.postId,
-              ),
-            };
-          } else return { ...user, savedPost: [...user.savedPost, action.payload.postId] };
-        } else return user;
-      });
+              savedPost: user.savedPost.includes(action.payload.postId)
+                ? user.savedPost.filter((savedPostId) => savedPostId !== action.payload.postId)
+                : [...user.savedPost, action.payload.postId],
+            }
+          : user,
+      );
     },
     updateLikedPostInUser(state, action) {
-      state.allUsers = state.allUsers.map((user) => {
-        if (user.id === action.payload.id) {
-          const isPostAlreadySaved = user.likedPost.filter(
-            (likedPostId) => likedPostId === action.payload.postId,
-          );
-          if (isPostAlreadySaved.length > 0) {
-            return {
+      state.allUsers = state.allUsers.map((user) =>
+        user.id === action.payload.id
+          ? {
               ...user,
-              likedPost: user.likedPost.filter(
-                (likedPostId) => likedPostId !== action.payload.postId,
-              ),
-            };
-          } else return { ...user, likedPost: [...user.likedPost, action.payload.postId] };
-        } else return user;
-      });
+              likedPost: user.likedPost.includes(action.payload.postId)
+                ? user.likedPost.filter((likedPostId) => likedPostId !== action.payload.postId)
+                : [...user.likedPost, action.payload.postId],
+            }
+          : user,
+      );
     },
   },
 });

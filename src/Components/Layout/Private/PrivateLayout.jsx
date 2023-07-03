@@ -1,7 +1,6 @@
-// Import the needed dependencies
 import { useState, useEffect } from 'react';
-import { Avatar, Layout, Menu } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
+import { Layout, Menu } from 'antd';
+import { useDispatch } from 'react-redux';
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
   AppstoreOutlined,
@@ -12,8 +11,8 @@ import {
   LogoutOutlined,
 } from '@ant-design/icons';
 import { logoutUser } from '../../../redux/auth/authSlice';
-import { getAvatarText, getUserById } from '../../../utils';
 import MyAvatar from '../../MyAvatar/MyAvatar';
+import { useIsLoggedIn, useLoggedInUser } from '../../../hooks';
 
 const { Content, Sider } = Layout;
 
@@ -32,10 +31,9 @@ const items = options.map((item) => ({
 }));
 
 const App = () => {
-  const { isLoggedIn, user } = useSelector((state) => ({
-    isLoggedIn: state.auth.isLoggedIn,
-    user: getUserById(state.auth.allUsers, state.auth.loggedInUserId),
-  }));
+  const user = useLoggedInUser();
+  const isLoggedIn = useIsLoggedIn();
+
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -47,7 +45,6 @@ const App = () => {
   };
 
   useEffect(() => {
-    // Collapse the Sider on mobile view
     const handleWindowResize = () => {
       if (window.innerWidth <= 576) {
         setCollapsed(true);
@@ -65,7 +62,6 @@ const App = () => {
   }, []);
 
   if (!isLoggedIn) {
-    // user is not authenticated
     return <Navigate to='/' />;
   }
 

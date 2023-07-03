@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+dayjs.extend(duration);
 
 export const isEmailExsist = (email, allUsers) => {
   const user = allUsers.filter((user) => user.email === email);
@@ -24,10 +25,6 @@ export const isEmailPasswordValid = (allUsers, newUser) => {
   }
 };
 
-export const getUserById = (allUsers, id) => {
-  return allUsers.find((user) => user.id === id);
-};
-
 export const getAvatarText = (name) => {
   const initials = name
     .split(' ')
@@ -36,32 +33,6 @@ export const getAvatarText = (name) => {
     .toUpperCase();
   return initials.length > 1 ? initials.slice(0, 2) : initials;
 };
-
-export const populateComment = (allComments, commentIds, allUsers) => {
-  const comments = commentIds
-    .map((commentId) => allComments.find(({ id }) => id === commentId))
-    .filter((element) => element !== undefined);
-  if (comments && comments.length > 0)
-    return comments.map((comment) => ({
-      ...comment,
-      userId: getUserById(allUsers, comment?.userId),
-    }));
-  else return [];
-};
-
-export const populateMyPost = (allPosts, user) => {
-  return user.myPosts
-    .map((postId) => allPosts.find((post) => post.id === postId))
-    .filter((element) => element !== undefined);
-};
-
-export const populateSavedPost = (allPosts, user) => {
-  return user.savedPost
-    .map((postId) => allPosts.find((post) => post.id === postId))
-    .filter((element) => element !== undefined);
-};
-
-dayjs.extend(duration);
 
 export const formatTimeAgo = (timestamp) => {
   const currentTime = dayjs();

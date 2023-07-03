@@ -41,7 +41,7 @@ const postSlice = createSlice({
         return post;
       });
     },
-    repost(state, action) {},
+    // repost(state, action) {},
   },
 });
 

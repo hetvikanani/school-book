@@ -1,19 +1,12 @@
-import { useSelector } from 'react-redux';
 import { Post } from '../../Components';
-import { getUserById, populateMyPost } from '../../utils';
 import { Empty, Typography } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
+import { usePopulatePosts } from '../../hooks';
 
 const { Title, Text } = Typography;
 
 const MyPosts = () => {
-  const myPosts = useSelector((state) =>
-    populateMyPost(
-      state.post.allPosts,
-      getUserById(state.auth.allUsers, state.auth.loggedInUserId),
-    ),
-  );
-
+  const myPosts = usePopulatePosts('myPosts');
   const renderPosts = () => {
     if (myPosts.length === 0) {
       return (
