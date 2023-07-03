@@ -123,15 +123,17 @@ const Register = () => {
   };
 
   const onFinish = () => {
-    message.success('Congratulation!! Now you can login with same cred!!');
-    dispatch(
-      registerUser({
-        ...form.getFieldValue(),
-        image: uploadedImage,
-        dob: dayjs(form.getFieldValue('dob')).valueOf(),
-      }),
-    );
-    navigate('/login');
+    form.validateFields().then(() => {
+      message.success('Congratulation!! Now you can login with same cred!!');
+      dispatch(
+        registerUser({
+          ...form.getFieldValue(),
+          image: uploadedImage,
+          dob: dayjs(form.getFieldValue('dob')).valueOf(),
+        }),
+      );
+      navigate('/login');
+    });
   };
 
   return (

@@ -65,7 +65,7 @@ const Login = () => {
       <div className='text-black text-center mt-4'>
         Dont have accout?{' '}
         <Link to='/' className='text-blue-500'>
-          Sing up
+          Sign up
         </Link>
       </div>
     </>
