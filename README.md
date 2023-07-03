@@ -1,4 +1,4 @@
-# Student Book
+# Student Book.
 
 Welcome to Student Book, a web application that provides various features for students to interact, share posts, manage their reminders, and stay organized. This README.md file will guide you through the project and explain its functionalities.
 
