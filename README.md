@@ -2,6 +2,9 @@
 
 Welcome to Student Book, a web application that provides various features for students to interact, share posts, manage their reminders, and stay organized. This README.md file will guide you through the project and explain its functionalities.
 
+# [Live Demo](https://school-book.vercel.app/)
+## URL : https://school-book.vercel.app/
+
 ## Table of Contents
 
 - [Student Book](#student-book)
