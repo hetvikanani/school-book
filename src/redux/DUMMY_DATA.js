@@ -6,7 +6,7 @@ export const ALL_USERS = [
     password: '123456',
     college: 'Marwadi',
     dob: 1688129443709,
-    image: null,
+    image: '/insta.png',
     savedPost: [],
     myPosts: ['123456789', '1234567890', '12345678901'],
     likedPost: [],

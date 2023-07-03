@@ -9,7 +9,7 @@ import MyAvatar from '../MyAvatar/MyAvatar';
 import styles from './post.module.css';
 import { updateSavedPostInUser } from '../../redux/reducers';
 import { useLoggedInUser, useLoggedInUserId, useUser } from '../../hooks';
-import PostActios from './PostButtons';
+import PostActions from './PostButtons';
 
 const Post = ({
   post: { likes, commentIds, createdAt, id, title, description, postedUserId, postImage },
@@ -58,11 +58,14 @@ const Post = ({
 
         <h3 className='text-xl font-semibold mb-1 mt-4'>{title}</h3>
         <p className='text-gray-600 mb-2 hidden md:block'>{description}</p>
-        <PostActios
+        <PostActions
           commentIds={commentIds}
           id={id}
           isCurrentUserSameAsPoster={isCurrentUserSameAsPoster}
           likes={likes}
+          title={title}
+          description={description}
+          postImage={postImage}
         />
       </Card>
     </div>

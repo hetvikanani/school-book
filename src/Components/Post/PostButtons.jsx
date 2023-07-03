@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
-import { Button, Input, List } from 'antd';
+import { Button, Form, Input, List, Modal, message } from 'antd';
 import {
   HeartOutlined,
   HeartFilled,
@@ -16,11 +16,20 @@ import { formatTimeAgo, generateUniqueId } from '../../utils';
 import MyAvatar from '../MyAvatar/MyAvatar';
 
 import { createComment } from '../../redux/comments/commentsSlice';
-import { likePost, updatePostComment } from '../../redux/post/postSlice';
+import { deletePost, likePost, updatePost, updatePostComment } from '../../redux/post/postSlice';
 import { updateLikedPostInUser } from '../../redux/reducers';
 import { useAllComments, useLoggedInUser, useLoggedInUserId } from '../../hooks';
+import ImageUpload from '../Form/ImageUpload/ImageUpload';
 
-const PostActios = ({ id, likes, commentIds, isCurrentUserSameAsPoster }) => {
+const PostActions = ({
+  id,
+  likes,
+  commentIds,
+  isCurrentUserSameAsPoster,
+  title,
+  description,
+  postImage,
+}) => {
   const loggedInUser = useLoggedInUser();
   const loggedInUserId = useLoggedInUserId();
   const allComments = useAllComments(commentIds);
@@ -30,6 +39,10 @@ const PostActios = ({ id, likes, commentIds, isCurrentUserSameAsPoster }) => {
     loggedInUser?.likedPost?.filter((likedPostId) => likedPostId === id).length > 0;
   const [showComments, setShowComments] = useState(false);
   const [comment, setComment] = useState('');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [updateForm] = Form.useForm();
+  const [uploadedImage, setUploadedImage] = useState(postImage);
 
   const handleLike = () => {
     dispatch(updateLikedPostInUser({ id: loggedInUserId, postId: id }));
@@ -47,6 +60,32 @@ const PostActios = ({ id, likes, commentIds, isCurrentUserSameAsPoster }) => {
   };
 
   const isSendButtonDisabled = comment.trim() === '';
+
+  const handleDelete = () => {
+    dispatch(deletePost({ id }));
+    setShowDeleteModal(false);
+    message.success('Post deleted successfully!!');
+  };
+
+  const handleUpdate = () => {
+    setShowUpdateModal(true);
+    const post = { title, description };
+    updateForm.setFieldsValue(post);
+  };
+
+  const handleUpdateSubmit = (values) => {
+    dispatch(
+      updatePost({
+        id,
+        title: values.title,
+        description: values.description,
+        postImage: uploadedImage,
+      }),
+    );
+    setShowUpdateModal(false);
+    message.success('Post updated successfully!!');
+  };
+
   return (
     <>
       <div className='flex items-center justify-between'>
@@ -114,18 +153,66 @@ const PostActios = ({ id, likes, commentIds, isCurrentUserSameAsPoster }) => {
       )}
       {isCurrentUserSameAsPoster && (
         <div className='flex justify-between mt-4'>
-          <Button danger className='flex items-center justify-center'>
+          <Button
+            danger
+            className='flex items-center justify-center'
+            onClick={() => setShowDeleteModal(true)}
+          >
             <DeleteOutlined className='w-4 h-4 mr-1' />
             Delete
           </Button>
-          <Button type='primary' className='flex items-center justify-center'>
+          <Button
+            onClick={handleUpdate}
+            type='primary'
+            className='flex items-center justify-center'
+          >
             <EditOutlined className='w-4 h-4 mr-1' />
             Edit
           </Button>
         </div>
       )}
+      <Modal
+        open={showDeleteModal}
+        title='Delete Post'
+        okText='Confirm'
+        cancelText='Cancel'
+        onCancel={() => setShowDeleteModal(false)}
+        onOk={handleDelete}
+      >
+        <p>Are you sure you want to delete this post?</p>
+      </Modal>
+      <Modal
+        open={showUpdateModal}
+        title='Update Post'
+        onCancel={() => setShowUpdateModal(false)}
+        footer={null}
+      >
+        <Form
+          form={updateForm}
+          onFinish={handleUpdateSubmit}
+          initialValues={{ title: '', description: '' }}
+        >
+          <Form.Item name='title' rules={[{ required: true, message: 'Please enter the title' }]}>
+            <Input placeholder='Enter title' />
+          </Form.Item>
+          <Form.Item
+            name='description'
+            rules={[{ required: true, message: 'Please enter the description' }]}
+          >
+            <Input.TextArea placeholder='Enter description' rows={4} />
+          </Form.Item>
+          <Form.Item label='Post Picture' name='postImage'>
+            <ImageUpload initalValue={uploadedImage} onUpload={setUploadedImage} />
+          </Form.Item>
+          <div>
+            <Button type='default' htmlType='submit'>
+              Update
+            </Button>
+          </div>
+        </Form>
+      </Modal>
     </>
   );
 };
 
-export default PostActios;
+export default PostActions;

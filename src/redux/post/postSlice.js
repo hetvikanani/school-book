@@ -41,10 +41,25 @@ const postSlice = createSlice({
         return post;
       });
     },
-    // repost(state, action) {},
+    deletePost(state, action) {
+      state.allPosts = state.allPosts.filter((post) => post.id !== action.payload.id);
+    },
+    updatePost(state, action) {
+      state.allPosts = state.allPosts.map((post) => {
+        if (post.id === action.payload.id) {
+          return {
+            ...post,
+            title: action.payload.title,
+            description: action.payload.description,
+            postImage: action.payload.postImage,
+          };
+        } else return post;
+      });
+    },
   },
 });
 
-export const { createPost, likePost, repost, updatePostComment } = postSlice.actions;
+export const { createPost, likePost, repost, updatePostComment, deletePost, updatePost } =
+  postSlice.actions;
 
 export default postSlice.reducer;
