@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 import dayjs from 'dayjs';
-import { ALL_POST } from '../DUMMY_DATA';
+import { ALL_POSTS } from '../DUMMY_DATA';
 
 const initialState = {
-  allPosts: ALL_POST,
+  allPosts: ALL_POSTS,
 };
 
 const postSlice = createSlice({

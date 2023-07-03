@@ -1,21 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { generateUniqueId } from '../../utils';
+import { ALL_USERS } from '../DUMMY_DATA';
 
 const initialState = {
-  allUsers: [
-    {
-      id: 'ljikoodg-p2mwt',
-      name: 'bhavya',
-      email: 'pbhavy4@gmail.com',
-      password: '123456',
-      college: 'Marwadi',
-      dob: 1688129443709,
-      image: null,
-      savedPost: [],
-      myPosts: ['123456789', '1234567890', '12345678901'],
-      likedPost: [],
-    },
-  ],
+  allUsers: ALL_USERS,
   loggedInUserId: null,
   isLoggedIn: false,
 };
